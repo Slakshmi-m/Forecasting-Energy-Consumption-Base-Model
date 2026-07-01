@@ -1,0 +1,73 @@
+[project]
+name = "energy-forecast"
+version = "0.1.0"
+description = "Safety-critical ENTSO-E load forecasting pipeline (spotforecast2-safe)"
+requires-python = ">=3.11"
+dependencies = [
+    # ENTSO-E Transparency Platform REST client
+    "entsoe-py>=0.8.0",
+    # Time series data structures for load index and preprocessing
+    "pandas>=2.0",
+    # Loads .env into os.environ at import time; used exclusively in config.py
+    "python-dotenv>=1.0",
+    # scikit-learn-compatible recursive/multi-step forecasting wrapper
+    "skforecast>=0.14.0",
+    # Gradient boosting regressor for baseline and safe model pipelines
+    "xgboost>=2.0",
+    # Lower-memory gradient boosting alternative to XGBoost
+    "lightgbm>=4.0",
+    # Gradient boosting with built-in categorical encoding support
+    "catboost>=1.2",
+    # Model serialisation — saves/loads fitted ForecasterRecursive to disk
+    "joblib>=1.3",
+    # Copernicus Climate Data Store access for ERA5 temperature reanalysis
+    "cdsapi>=0.7.7",
+    # NetCDF file handling for ERA5 data parsing
+    "xarray>=2024.0",
+    # NetCDF4 backend required by xarray to read ERA5 .nc files
+    "netcdf4>=1.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Canonical formatter; enforces 88-char line limit (CI gate)
+    "black>=24.0",
+    # Fast linter; enforces F401/F811/F841 zero-dead-code rule (CI gate)
+    "ruff>=0.4.0",
+    # Static type checker (CI gate)
+    "mypy>=1.0",
+    # Test runner
+    "pytest>=8.0",
+    # Coverage reporting; gates at 80% line coverage
+    "pytest-cov>=5.0",
+    # Mock helpers for patching EntsoePandasClient in unit tests
+    "pytest-mock>=3.0",
+    # Type stubs for pandas
+    "pandas-stubs>=2.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F401", "F811", "F841"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=src/energy_forecast --cov-report=term-missing --cov-fail-under=80"
