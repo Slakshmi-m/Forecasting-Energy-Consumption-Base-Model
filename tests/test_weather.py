@@ -28,8 +28,8 @@ class TestWeatherFetch:
         with pytest.raises(WeatherFetchError, match="Unknown country code"):
             fetch_era5_temperature("XX", start, end)
 
-    def test_add_weather_features_mismatched_lengths_raises(self):
-        """Weather and load series with different lengths should raise."""
+    def test_add_weather_features_mismatched_lengths_uses_intersection(self):
+        """Weather and load series with different lengths should align on intersection."""
         load = pd.Series(
             [1000, 1100, 1200],
             index=pd.date_range("2022-01-01", periods=3, freq="60min", tz="UTC"),
@@ -40,8 +40,8 @@ class TestWeatherFetch:
             index=pd.date_range("2022-01-01", periods=4, freq="60min", tz="UTC"),
             name="temp_K"
         )
-        with pytest.raises(PreprocessingError, match="mismatched lengths"):
-            add_weather_features(load, temp)
+        result = add_weather_features(load, temp)
+        assert len(result) == 3  # intersection of load (3) and temp (4)
 
     def test_add_weather_features_creates_correct_columns(self):
         """Weather features should include temp_c, temp_lag_24, temp_deviation."""
