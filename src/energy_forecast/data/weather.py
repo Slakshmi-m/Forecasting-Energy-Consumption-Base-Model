@@ -265,4 +265,4 @@ def load_or_refresh_weather_cache(cutoff: pd.Timestamp) -> pd.Series:
             "Weather cache saved: %d records to %s", len(full_series), cache_path
         )
 
-    return full_series
+    return full_series[full_series.index < cutoff]

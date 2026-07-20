@@ -53,12 +53,15 @@ submissions/**/*.json
 submissions/*.csv
 submissions/*.json
 
+# CatBoost training artefacts (generated during training)
+catboost_info/
+
 # CDS API cache (ERA5 downloads)
 .cdsapirc
 
 # Jupyter
 .ipynb_checkpoints/
-*.ipynb
+notebooks/data/
 
 # OS
 .DS_Store

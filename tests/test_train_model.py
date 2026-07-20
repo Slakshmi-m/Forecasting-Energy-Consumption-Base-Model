@@ -20,10 +20,11 @@ def _make_series(periods: int = 200) -> pd.Series:
 class TestRunTraining:
     def test_returns_model_card_path(self, tmp_path: Path) -> None:
         series = _make_series(300)
-        exog = pd.DataFrame({"hour": series.index.hour}, index=series.index)
+        exog = pd.DataFrame({"hour": series.index.hour, "temp_c": 15.0}, index=series.index)
 
         with (
             patch("energy_forecast.train_model.load_or_refresh_cache", return_value=series),
+            patch("energy_forecast.train_model.load_or_refresh_weather_cache", return_value=series),
             patch("energy_forecast.train_model.audit_gaps", return_value={"total_missing": 0, "max_run": 0}),
             patch("energy_forecast.train_model.build_features", return_value=(series, exog)),
             patch("energy_forecast.train_model.build_forecaster") as mock_bf,
@@ -48,10 +49,11 @@ class TestRunTraining:
         import logging
 
         series = _make_series(300)
-        exog = pd.DataFrame({"hour": series.index.hour}, index=series.index)
+        exog = pd.DataFrame({"hour": series.index.hour, "temp_c": 15.0}, index=series.index)
 
         with (
             patch("energy_forecast.train_model.load_or_refresh_cache", return_value=series),
+            patch("energy_forecast.train_model.load_or_refresh_weather_cache", return_value=series),
             patch("energy_forecast.train_model.audit_gaps", return_value={"total_missing": 5, "max_run": 2}),
             patch("energy_forecast.train_model.build_features", return_value=(series, exog)),
             patch("energy_forecast.train_model.build_forecaster", return_value=MagicMock()),
