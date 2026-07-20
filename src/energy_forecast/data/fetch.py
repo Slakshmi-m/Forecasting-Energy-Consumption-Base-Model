@@ -159,8 +159,7 @@ def load_or_refresh_cache(cutoff: pd.Timestamp) -> pd.Series:
         full_series.to_frame().to_csv(cache_path)
         _logger.info("Cache saved: %d records to %s", len(full_series), cache_path)
 
-    return full_series
-    # return full_series[full_series.index < cutoff]
+    return full_series[full_series.index < cutoff]
 
 
 def _save_series(series: pd.Series, output_dir: Path) -> Path:
