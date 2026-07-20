@@ -105,7 +105,7 @@ class TestLoadOrRefreshCache:
             patch("energy_forecast.data.fetch.settings", self._mock_settings(tmp_path)),
             patch("energy_forecast.data.fetch.load_load_data", return_value=fetched),
         ):
-            result = load_or_refresh_cache(pd.Timestamp("2022-01-05", tz="UTC"))
+            result = load_or_refresh_cache(pd.Timestamp("2022-01-06", tz="UTC"))
 
         assert (tmp_path / "load_DE_LU_training_cache.csv").exists()
         assert result.name == "load_MW"
